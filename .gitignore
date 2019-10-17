@@ -199,3 +199,5 @@ pip-selfcheck.json
 
 # End of https://www.gitignore.io/api/vim,flask,python,virtualenv
 
+# firebase
+achilles-*.json

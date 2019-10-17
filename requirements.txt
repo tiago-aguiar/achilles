@@ -1,2 +1,4 @@
 flask
 pytest-flask
+Flask-UUID
+firebase-admin
