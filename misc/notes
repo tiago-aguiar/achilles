@@ -1,0 +1,5 @@
+export FLASK_APP=app:create_app
+export FLASK_ENV=development
+
+$ pytest tests/ -v
+$ flask run --port=8000
