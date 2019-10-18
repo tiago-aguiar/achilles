@@ -22,15 +22,15 @@ class Firestore():
             for param in where:
                 collection_ref = collection_ref.where(param[0], param[1], param[2])
 
-            medias = []
             docs = collection_ref.order_by(
                 'published_date',
                 direction=firestore.Query.ASCENDING
             ).limit(1).stream()
 
+            media = None
             for doc in docs:
-                medias.append(doc.to_dict())
+                media = doc.to_dict()
 
-            return medias[0]
+            return media
         except NotFound:
             print('No such document at account={} => entity{}'.format(account_id, entity))

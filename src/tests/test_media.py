@@ -6,7 +6,7 @@ from datetime import datetime
 import uuid
 
 
-def test_get_last_media_for_instagram(app):
+def test_get_last_media_for_ig(app):
     with app.test_client() as client:
         entity = Entity.IG
         account = Account(id='0aed82c7-7436-4573-a4c6-90574d578df2', name='achilles')
@@ -33,3 +33,48 @@ def test_get_last_media_for_instagram(app):
         assert '/folder1/photo1.jpg' == media['media_url'][0]
         assert '/folder2/photo2.jpg' == media['media_url'][1]
 
+
+def test_get_empty_media_for_fb(app):
+    with app.test_client() as client:
+        entity = Entity.FB
+        account = Account(id='0aed82c7-7436-4573-a4c6-90574d578df2', name='achilles')
+        url = '/accounts/{}/entities/{}/medias/next'.format(account.id, entity.value)
+
+        assert entity.value == 2
+        assert account.name == 'achilles'
+
+        assert url == '/accounts/0aed82c7-7436-4573-a4c6-90574d578df2/entities/2/medias/next'
+
+        response = client.get(url)
+        assert response.status_code == 200
+
+        data = json.loads(response.data)
+
+        assert str(account.id) == data['account_id']
+        assert 2 == data['entity']
+
+        media = data['media']
+        assert media is None
+
+
+def test_get_media_not_published_yet(app):
+    with app.test_client() as client:
+        entity = Entity.YT
+        account = Account(id='0aed82c7-7436-4573-a4c6-90574d578df2', name='achilles')
+        url = '/accounts/{}/entities/{}/medias/next'.format(account.id, entity.value)
+
+        assert entity.value == 0
+        assert account.name == 'achilles'
+
+        assert url == '/accounts/0aed82c7-7436-4573-a4c6-90574d578df2/entities/0/medias/next'
+
+        response = client.get(url)
+        assert response.status_code == 200
+
+        data = json.loads(response.data)
+
+        assert str(account.id) == data['account_id']
+        assert 0 == data['entity']
+
+        media = data['media']
+        assert media is not None
