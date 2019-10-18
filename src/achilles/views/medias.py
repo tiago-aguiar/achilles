@@ -4,19 +4,17 @@ from ..firebase.firestore import Firestore
 bp = Blueprint('medias', __name__)
 firestore = Firestore()
 
-@bp.route("/accounts/<uuid:account_uuid>/entities/<int:entity>/medias/next")
-def next_media(account_uuid, entity):
-    wheres  = [
-        ('account_id', '==', str(account_uuid)),
-        ('entity', '==', entity)
-    ]
+@bp.route("/accounts/<uuid:account_id>/entities/<int:entity>/medias/next")
+def next_media(account_id,entity):
 
-    medias = []
-    docs = firestore.get_document_by('medias', wheres)
-    for doc in docs:
-        medias.append(doc.to_dict())
+    media = firestore.get_last_media_by(account_id, entity)
+    print(media)
 
-    return jsonify({'account_uuid': account_uuid, 'medias': medias})
+    return jsonify({
+        'account_id': account_id,
+        'entity': entity,
+        'media': media
+    })
 
 
 def configure(app):
