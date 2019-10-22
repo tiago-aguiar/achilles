@@ -9,7 +9,7 @@ queue = Queue('kratos-app', connection=Redis.from_url('redis://'))
 
 @bp.route("/schedulers")
 def get_schedulers():
-    job = queue.enqueue('core.app.get_schedulers')
+    job = queue.enqueue('kratos.scheduler.get_schedulers')
 
     while not job.is_finished:
         job.refresh()
@@ -25,8 +25,11 @@ def get_schedulers():
 
 @bp.route("/scheduler/accounts/<uuid:account_id>/entities/<int:entity>/start")
 def scheduler_start(account_id, entity):
-    interval = 30
-    job = queue.enqueue('core.app.add_queue', interval, account_id, entity)
+
+    username = '' # TODO
+    interval = 120
+    password = ''
+    job = queue.enqueue('kratos.scheduler.add_queue', interval, account_id, entity, username, password)
 
     while not job.is_finished:
         job.refresh()
@@ -45,7 +48,7 @@ def scheduler_start(account_id, entity):
 def scheduler_stop(job_id):
     queue = Queue('kratos-app', connection=Redis.from_url('redis://'))
 
-    job = queue.enqueue('core.app.remove_queue', str(job_id))
+    job = queue.enqueue('kratos.scheduler.remove_queue', str(job_id))
     while not job.is_finished:
         job.refresh()
         print(job.meta)

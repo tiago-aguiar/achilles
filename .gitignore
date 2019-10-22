@@ -196,6 +196,7 @@ ENV/
 env.bak/
 venv.bak/
 pip-selfcheck.json
+share/
 
 # End of https://www.gitignore.io/api/vim,flask,python,virtualenv
 
