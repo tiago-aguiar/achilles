@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from redis import Redis
 from rq import Queue
 
@@ -23,13 +23,16 @@ def get_schedulers():
     })
 
 
-@bp.route("/scheduler/accounts/<uuid:account_id>/entities/<int:entity>/start")
+@bp.route("/scheduler/accounts/<uuid:account_id>/entities/<int:entity>/start",
+          methods=['POST'])
 def scheduler_start(account_id, entity):
-
-    username = '' # TODO
-    interval = 120
-    password = ''
-    job = queue.enqueue('kratos.scheduler.add_queue', interval, account_id, entity, username, password)
+    json = request.json
+    username = json['username']
+    interval = json['interval']
+    password = json['password']
+    start_time = json['start_time']
+    job = queue.enqueue('kratos.scheduler.add_queue', start_time,
+                        interval, account_id, entity, username, password)
 
     while not job.is_finished:
         job.refresh()
