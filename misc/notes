@@ -3,3 +3,6 @@ export FLASK_ENV=development
 
 $ pytest tests/ -v
 $ flask run --port=8000
+
+$ cd src
+$ gunicorn --bind 0.0.0.0:8000 achilles.wsgi:myapp
