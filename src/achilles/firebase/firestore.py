@@ -2,8 +2,6 @@ from google.cloud.exceptions import NotFound
 from firebase_admin import firestore
 from . import config
 
-import os
-
 from datetime import datetime, timezone
 
 
