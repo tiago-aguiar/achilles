@@ -11,14 +11,12 @@ GROUP=root                                     	# the group to run as
 NUM_WORKERS=1                                 	# how many worker processes should Gunicorn spawn
 FLASK_WSGI_MODULE=achilles.wsgi              	# WSGI module name
 
-FIREBASE_CREDENTIALS=/var/www/achilles/src/achilles/achilles-pj-dev-fdc87e41fbbd.json
 echo "Starting $NAME as `whoami`"
 
 # Activate the virtual environment
 
 cd $FLASK_DIR
 source /var/www/achilles/bin/activate
-export FIREBASE_CREDENTIALS=$FIREBASE_CREDENTIALS
 export PYTHONPATH=$FLASK_DIR:$PYTHONPATH
 
 # Create the run directory if it doesn't exist
