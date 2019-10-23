@@ -23,6 +23,30 @@ def get_schedulers():
     })
 
 
+@bp.route("/scheduler/accounts/<uuid:account_id>/entities/<int:entity>/now",
+          methods=['POST'])
+def scheduler_send_now(account_id, entity):
+    json = request.json
+    username = json['username']
+    interval = json['interval']
+    password = json['password']
+    start_time = json['start_time']
+    job = queue.enqueue('kratos.scheduler.send_queue_now', start_time,
+                        interval, account_id, entity, username, password)
+
+    while not job.is_finished:
+        job.refresh()
+        print(job.meta)
+
+    return jsonify({
+        'account_id': account_id,
+        'entity': entity,
+        'status': 200,
+        'job_id': job.get_id(),
+        'job': job.meta,
+    })
+
+
 @bp.route("/scheduler/accounts/<uuid:account_id>/entities/<int:entity>/start",
           methods=['POST'])
 def scheduler_start(account_id, entity):
