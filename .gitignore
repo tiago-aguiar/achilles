@@ -203,3 +203,6 @@ share/
 
 # firebase
 achilles-*.json
+
+# more stuff
+src/tests/create_media.py
